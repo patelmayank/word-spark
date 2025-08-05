@@ -14,8 +14,12 @@ serve(async (req) => {
   }
 
   try {
-    // Only allow PUT requests
-    if (req.method !== 'PUT') {
+    console.log('Update quote function called with method:', req.method);
+    console.log('Request headers:', Object.fromEntries(req.headers.entries()));
+
+    // Accept both POST and PUT requests (supabase.functions.invoke uses POST)
+    if (req.method !== 'POST' && req.method !== 'PUT') {
+      console.error('Invalid method:', req.method);
       return new Response(
         JSON.stringify({ error: 'Method not allowed' }), 
         { 
@@ -54,7 +58,22 @@ serve(async (req) => {
     }
 
     // Parse request body
-    const { quote_id, quote_text, author_name } = await req.json();
+    let requestBody;
+    try {
+      requestBody = await req.json();
+      console.log('Parsed request body:', requestBody);
+    } catch (parseError) {
+      console.error('Failed to parse request body:', parseError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON in request body' }), 
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    const { quote_id, quote_text, author_name } = requestBody;
 
     // Validate quote_id
     if (!quote_id || typeof quote_id !== 'string') {

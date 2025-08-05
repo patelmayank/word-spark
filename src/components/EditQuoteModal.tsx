@@ -80,6 +80,12 @@ const EditQuoteModal: React.FC<EditQuoteModalProps> = ({
 
     try {
       // Call the Edge Function to update the quote
+      console.log('Calling update-quote function with data:', {
+        quote_id: quote.id,
+        quote_text: trimmedQuote,
+        author_name: authorName.trim(),
+      });
+
       const { data, error } = await supabase.functions.invoke('update-quote', {
         body: {
           quote_id: quote.id,
@@ -87,6 +93,8 @@ const EditQuoteModal: React.FC<EditQuoteModalProps> = ({
           author_name: authorName.trim(),
         },
       });
+
+      console.log('Edge function response:', { data, error });
 
       if (error) {
         throw error;
