@@ -20,8 +20,9 @@ const Navbar = () => {
     } else {
       toast({
         title: "Signed out successfully",
-        description: "Come back soon for more inspiration!",
+        description: "You have been logged out.",
       });
+      // Note: Redirect is handled in AuthContext signOut method
     }
   };
 
