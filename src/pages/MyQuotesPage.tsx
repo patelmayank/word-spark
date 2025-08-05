@@ -12,6 +12,7 @@ interface Quote {
   quote_text: string;
   author_name: string;
   created_at: string;
+  updated_at: string;
   user_id: string;
 }
 
@@ -47,6 +48,14 @@ const MyQuotesPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleQuoteUpdated = (updatedQuote: Quote) => {
+    setQuotes(prevQuotes => 
+      prevQuotes.map(quote => 
+        quote.id === updatedQuote.id ? updatedQuote : quote
+      )
+    );
   };
 
   if (!user) {
@@ -87,7 +96,11 @@ const MyQuotesPage = () => {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {quotes.map((quote, index) => (
               <div key={quote.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                <QuoteCard quote={quote} />
+                <QuoteCard 
+                  quote={quote} 
+                  showEditButton={true}
+                  onQuoteUpdated={handleQuoteUpdated}
+                />
               </div>
             ))}
           </div>

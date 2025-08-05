@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import EditQuoteModal from '@/components/EditQuoteModal';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
@@ -27,6 +28,7 @@ const QuoteDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -99,6 +101,14 @@ const QuoteDetailPage = () => {
     } finally {
       setDeleting(false);
     }
+  };
+
+  const handleQuoteUpdated = (updatedQuote: QuoteDetail) => {
+    setQuote(updatedQuote);
+    toast({
+      title: "Quote updated",
+      description: "Your quote has been successfully updated!",
+    });
   };
 
   const formatDate = (dateString: string) => {
@@ -184,13 +194,7 @@ const QuoteDetailPage = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => {
-                          // Future: Navigate to edit page
-                          toast({
-                            title: "Edit functionality",
-                            description: "Edit feature coming soon!",
-                          });
-                        }}
+                        onClick={() => setEditModalOpen(true)}
                       >
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
@@ -292,6 +296,16 @@ const QuoteDetailPage = () => {
             </Card>
           ) : null}
         </div>
+
+        {/* Edit Quote Modal */}
+        {quote && (
+          <EditQuoteModal
+            quote={quote}
+            isOpen={editModalOpen}
+            onClose={() => setEditModalOpen(false)}
+            onQuoteUpdated={handleQuoteUpdated}
+          />
+        )}
       </div>
     </div>
   );

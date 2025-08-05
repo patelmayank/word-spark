@@ -12,6 +12,7 @@ interface Quote {
   quote_text: string;
   author_name: string;
   created_at: string;
+  updated_at: string;
   user_id: string;
 }
 
