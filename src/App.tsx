@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
 import GalleryPage from "./pages/GalleryPage";
@@ -23,30 +24,35 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/quote/:id" element={<QuoteDetailPage />} />
-            <Route 
-              path="/submit" 
-              element={
-                <ProtectedRoute>
-                  <SubmitQuotePage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/my-quotes" 
-              element={
-                <ProtectedRoute>
-                  <MyQuotesPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/gallery" element={<GalleryPage />} />
+                <Route path="/quote/:id" element={<QuoteDetailPage />} />
+                <Route 
+                  path="/submit" 
+                  element={
+                    <ProtectedRoute>
+                      <SubmitQuotePage />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/my-quotes" 
+                  element={
+                    <ProtectedRoute>
+                      <MyQuotesPage />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
