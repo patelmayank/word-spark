@@ -30,25 +30,47 @@ const SubmitQuotePage = () => {
       return;
     }
 
+    // Validate quote length on frontend too
+    const trimmedQuote = quoteText.trim();
+    if (trimmedQuote.length < 10) {
+      toast({
+        title: "Quote too short",
+        description: "Quote must be at least 10 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (trimmedQuote.length > 280) {
+      toast({
+        title: "Quote too long",
+        description: "Quote must be no more than 280 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const { error } = await supabase
-        .from('quotes')
-        .insert([
-          {
-            quote_text: quoteText.trim(),
-            author_name: authorName.trim() || 'Unknown',
-            user_id: user.id,
-          },
-        ]);
+      // Call the Edge Function instead of direct Supabase insert
+      const { data, error } = await supabase.functions.invoke('submit-quote', {
+        body: {
+          quote_text: trimmedQuote,
+          author_name: authorName.trim(),
+        },
+      });
 
       if (error) {
         throw error;
       }
 
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
       toast({
-        title: "Quote added successfully!",
+        title: data?.message || "Quote added successfully!",
         description: "Your inspiring quote has been shared with the community.",
         variant: "default",
       });
@@ -60,9 +82,17 @@ const SubmitQuotePage = () => {
       // Navigate to gallery
       navigate('/gallery');
     } catch (error: any) {
+      console.error('Error submitting quote:', error);
+      
+      // Handle specific error messages from the Edge Function
+      let errorMessage = "Please try again later.";
+      if (error.message) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "Error submitting quote",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
