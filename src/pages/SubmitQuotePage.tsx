@@ -38,7 +38,7 @@ const SubmitQuotePage = () => {
         .insert([
           {
             quote_text: quoteText.trim(),
-            author_name: authorName.trim(),
+            author_name: authorName.trim() || 'Unknown',
             user_id: user.id,
           },
         ]);
@@ -48,7 +48,7 @@ const SubmitQuotePage = () => {
       }
 
       toast({
-        title: "Quote submitted successfully!",
+        title: "Quote added successfully!",
         description: "Your inspiring quote has been shared with the community.",
         variant: "default",
       });
@@ -125,17 +125,18 @@ const SubmitQuotePage = () => {
                       onChange={(e) => setQuoteText(e.target.value)}
                       className="pl-10 min-h-[120px] resize-none"
                       required
-                      maxLength={500}
+                      minLength={10}
+                      maxLength={280}
                     />
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {quoteText.length}/500 characters
+                    {quoteText.length}/280 characters • Minimum 10 characters required
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="author" className="text-sm font-medium">
-                    Author Name *
+                    Author Name <span className="text-muted-foreground">(optional, defaults to "Unknown")</span>
                   </Label>
                   <div className="relative">
                     <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -146,7 +147,6 @@ const SubmitQuotePage = () => {
                       value={authorName}
                       onChange={(e) => setAuthorName(e.target.value)}
                       className="pl-10"
-                      required
                       maxLength={100}
                     />
                   </div>
@@ -154,11 +154,11 @@ const SubmitQuotePage = () => {
 
                 <div className="bg-accent/20 rounded-lg p-4 border border-accent/30">
                   <h4 className="font-medium text-foreground mb-2">Preview:</h4>
-                  {quoteText && authorName ? (
+                  {quoteText ? (
                     <blockquote className="text-foreground italic">
                       "{quoteText}"
                       <footer className="text-primary font-medium mt-2">
-                        — {authorName}
+                        — {authorName || 'Unknown'}
                       </footer>
                     </blockquote>
                   ) : (
@@ -172,7 +172,7 @@ const SubmitQuotePage = () => {
                   type="submit"
                   variant="inspirational"
                   className="w-full text-lg py-3"
-                  disabled={loading || !quoteText.trim() || !authorName.trim()}
+                  disabled={loading || !quoteText.trim() || quoteText.trim().length < 10}
                 >
                   {loading ? (
                     <div className="flex items-center space-x-2">

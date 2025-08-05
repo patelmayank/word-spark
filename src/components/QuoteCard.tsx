@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Quote as QuoteIcon } from 'lucide-react';
@@ -17,6 +18,8 @@ interface QuoteCardProps {
 }
 
 const QuoteCard: React.FC<QuoteCardProps> = ({ quote, showAuthor = true }) => {
+  const navigate = useNavigate();
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -25,8 +28,15 @@ const QuoteCard: React.FC<QuoteCardProps> = ({ quote, showAuthor = true }) => {
     });
   };
 
+  const handleClick = () => {
+    navigate(`/quote/${quote.id}`);
+  };
+
   return (
-    <Card className="bg-gradient-card hover:shadow-elegant transition-all duration-300 hover:scale-[1.02] animate-fade-in border-0">
+    <Card 
+      className="bg-gradient-card hover:shadow-elegant transition-all duration-300 hover:scale-[1.02] animate-fade-in border-0 cursor-pointer group"
+      onClick={handleClick}
+    >
       <CardContent className="p-6">
         <div className="flex items-start space-x-4">
           <div className="flex-shrink-0">

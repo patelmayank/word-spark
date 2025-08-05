@@ -10,6 +10,7 @@ import AuthPage from "./pages/AuthPage";
 import GalleryPage from "./pages/GalleryPage";
 import SubmitQuotePage from "./pages/SubmitQuotePage";
 import MyQuotesPage from "./pages/MyQuotesPage";
+import QuoteDetailPage from "./pages/QuoteDetailPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/submit" element={<SubmitQuotePage />} />
             <Route path="/my-quotes" element={<MyQuotesPage />} />
+            <Route path="/quote/:id" element={<QuoteDetailPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
