@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { sanitizeText } from '@/lib/sanitize';
 import { toast } from '@/hooks/use-toast';
 import { Quote, User, Save, X } from 'lucide-react';
 
@@ -201,9 +202,9 @@ const EditQuoteModal: React.FC<EditQuoteModalProps> = ({
             <h4 className="font-medium text-foreground mb-2">Preview:</h4>
             {quoteText ? (
               <blockquote className="text-foreground italic">
-                "{quoteText}"
+                <span dangerouslySetInnerHTML={{ __html: `"${sanitizeText(quoteText)}"` }} />
                 <footer className="text-primary font-medium mt-2">
-                  — {authorName || 'Unknown'}
+                  <span dangerouslySetInnerHTML={{ __html: `— ${sanitizeText(authorName || 'Unknown')}` }} />
                 </footer>
               </blockquote>
             ) : (

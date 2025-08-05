@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import EditQuoteModal from '@/components/EditQuoteModal';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { sanitizeText } from '@/lib/sanitize';
 import { toast } from '@/hooks/use-toast';
 import { Quote, ArrowLeft, Calendar, User, Edit, Trash2, AlertCircle } from 'lucide-react';
 
@@ -225,13 +226,15 @@ const QuoteDetailPage = () => {
                 <div className="space-y-8">
                   {/* Main Quote */}
                   <div className="text-center py-8 px-4 bg-gradient-hero/5 rounded-lg border border-primary/10">
-                    <blockquote className="text-2xl md:text-3xl font-medium text-foreground leading-relaxed italic">
-                      "{quote.quote_text}"
-                    </blockquote>
+                    <blockquote 
+                      className="text-2xl md:text-3xl font-medium text-foreground leading-relaxed italic"
+                      dangerouslySetInnerHTML={{ __html: `"${sanitizeText(quote.quote_text)}"` }}
+                    />
                     <footer className="mt-6">
-                      <cite className="text-xl font-semibold text-primary not-italic">
-                        — {quote.author_name}
-                      </cite>
+                      <cite 
+                        className="text-xl font-semibold text-primary not-italic"
+                        dangerouslySetInnerHTML={{ __html: `— ${sanitizeText(quote.author_name)}` }}
+                      />
                     </footer>
                   </div>
 

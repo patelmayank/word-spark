@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import EditQuoteModal from '@/components/EditQuoteModal';
 import { useAuth } from '@/contexts/AuthContext';
+import { sanitizeText } from '@/lib/sanitize';
 import { Quote as QuoteIcon, Edit } from 'lucide-react';
 
 interface Quote {
@@ -72,14 +73,16 @@ const QuoteCard: React.FC<QuoteCardProps> = ({
               </div>
             </div>
             <div className="flex-1 min-w-0">
-              <blockquote className="text-lg font-medium text-foreground leading-relaxed mb-4 italic">
-                "{quote.quote_text}"
-              </blockquote>
+              <blockquote 
+                className="text-lg font-medium text-foreground leading-relaxed mb-4 italic"
+                dangerouslySetInnerHTML={{ __html: `"${sanitizeText(quote.quote_text)}"` }}
+              />
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-semibold text-primary">
-                    — {quote.author_name}
-                  </span>
+                  <span 
+                    className="text-sm font-semibold text-primary"
+                    dangerouslySetInnerHTML={{ __html: `— ${sanitizeText(quote.author_name)}` }}
+                  />
                 </div>
                 <div className="flex items-center space-x-2">
                   {showEditButton && isOwner && (
